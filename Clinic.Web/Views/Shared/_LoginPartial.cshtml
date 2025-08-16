@@ -11,7 +11,7 @@
             Hello @User.Identity?.Name!
         </a>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Manage Account</a></li>
+            <li><a class="dropdown-item" asp-controller="Account" asp-action="AccessDenied">Manage Account</a></li>
             @if (User.IsInRole("Patient"))
             {
                 <li><a class="dropdown-item" asp-controller="Patient" asp-action="Dashboard">Patient Dashboard</a></li>
@@ -24,8 +24,9 @@
         </ul>
     </li>
     <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
         </form>
     </li>
 }

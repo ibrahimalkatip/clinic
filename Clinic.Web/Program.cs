@@ -20,6 +20,11 @@ builder.Services
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+	options.LoginPath = "/Account/Login";
+	options.AccessDeniedPath = "/Account/AccessDenied";
+});
 
 var app = builder.Build();
 
@@ -51,6 +56,8 @@ app.MapRazorPages();
 // Seed roles and default admin user
 using (var scope = app.Services.CreateScope())
 {
+	var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+	await dbContext.Database.MigrateAsync();
 	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 	var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
