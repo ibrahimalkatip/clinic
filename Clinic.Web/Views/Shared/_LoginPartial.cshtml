@@ -11,7 +11,7 @@
             Hello @User.Identity?.Name!
         </a>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" asp-controller="Account" asp-action="AccessDenied">Manage Account</a></li>
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Manage Account</a></li>
             @if (User.IsInRole("Patient"))
             {
                 <li><a class="dropdown-item" asp-controller="Patient" asp-action="Dashboard">Patient Dashboard</a></li>
