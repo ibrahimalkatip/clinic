@@ -1,0 +1,39 @@
+@model IEnumerable<Clinic.Web.Models.ApplicationUser>
+@{
+	ViewData["Title"] = "Patients";
+}
+
+<h2>Patients</h2>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Status</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var p in Model)
+		{
+			<tr>
+				<td>@p.FullName</td>
+				<td>@p.Email</td>
+				<td>@p.Status</td>
+				<td>
+					<form asp-controller="Admin" asp-action="SendVisitRequest" method="post" class="d-inline">
+						<input type="hidden" name="patientId" value="@p.Id" />
+						<select name="type" class="form-select form-select-sm d-inline w-auto">
+							<option>Checkup</option>
+							<option>Visit</option>
+						</select>
+						<input name="notes" placeholder="Notes" class="form-control form-control-sm d-inline w-50" />
+						<button type="submit" class="btn btn-sm btn-primary">Send</button>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+

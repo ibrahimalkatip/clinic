@@ -1,0 +1,110 @@
+@model IEnumerable<Clinic.Web.Models.VisitRequest>
+@{
+	ViewData["Title"] = "My Dashboard";
+	var user = ViewBag.User as Clinic.Web.Models.ApplicationUser;
+}
+
+<h2>Welcome, @user?.FullName</h2>
+
+<div class="card mb-3">
+	<div class="card-header">My Profile</div>
+	<div class="card-body">
+		<form asp-action="UpdateProfile" method="post" class="row g-2">
+			<div class="col-md-4">
+				<label class="form-label">Full name</label>
+				<input class="form-control" name="fullName" value="@user?.FullName" />
+			</div>
+			<div class="col-md-4">
+				<label class="form-label">Address</label>
+				<input class="form-control" name="address" value="@user?.Address" />
+			</div>
+			<div class="col-md-4">
+				<label class="form-label">Status</label>
+				<input class="form-control" name="status" value="@user?.Status" />
+			</div>
+			<div class="col-12">
+				<button class="btn btn-primary">Save</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-lg-4">
+		<div class="card mb-3">
+			<div class="card-header">Requests by Status</div>
+			<div class="card-body">
+				<div id="statusChartEmpty" class="text-muted small" style="display:none">No requests yet. The chart will appear once you have requests.</div>
+				<canvas id="statusChart" height="240"></canvas>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-8">
+		<div class="card">
+	<div class="card-header">My Requests</div>
+	<div class="card-body">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Type</th>
+					<th>Notes</th>
+					<th>Status</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var r in Model)
+				{
+					<tr>
+						<td>@r.Id</td>
+						<td>@r.Type</td>
+						<td>@r.Notes</td>
+						<td>@r.Status</td>
+						<td>@r.RequestedAt.ToLocalTime()</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-7hQe8jJ3xAm9Xmt6NQf4W3gqj7/lL6Mx86nvxv5g1zqUXGqgQFymvO6c4iN5k+0E" crossorigin="anonymous"></script>
+	<script>
+		(function(){
+			try {
+				const data = @Html.Raw(ViewBag.StatusCountsJson ?? "[]");
+
+				const labels = Array.isArray(data) ? data.map(x => x.status) : [];
+				const counts = Array.isArray(data) ? data.map(x => x.count) : [];
+				const canvas = document.getElementById('statusChart');
+				const emptyMsg = document.getElementById('statusChartEmpty');
+
+				if (!canvas) return;
+				if (!labels.length) {
+					emptyMsg && (emptyMsg.style.display = 'block');
+					canvas.style.display = 'none';
+					return;
+				}
+
+				const ctx = canvas.getContext('2d');
+				new Chart(ctx, {
+					type: 'doughnut',
+					data: {
+						labels: labels,
+						datasets: [{
+							label: 'Requests',
+							data: counts,
+							backgroundColor: ['#0d6efd','#198754','#dc3545','#ffc107','#6c757d']
+						}]
+					}
+				});
+			} catch (e) { console.warn('Chart render error', e); }
+		})();
+	</script>
+}
+
+

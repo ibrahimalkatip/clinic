@@ -1,0 +1,33 @@
+# Visual Studio / .NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+**/bin/
+**/obj/
+
+# Rider
+.idea/
+
+# ASP.NET / EF
+*.db
+*.db-journal
+Clinic.Web/app.db
+**/Migrations/obj/
+
+# Logs
+*.log
+
+# Secrets
+secrets.json
+
+# Others
+node_modules/
+dist/
+wwwroot/*.map
+

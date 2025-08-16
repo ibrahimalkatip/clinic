@@ -1,0 +1,44 @@
+@model IEnumerable<Clinic.Web.Models.VisitRequest>
+@{
+	ViewData["Title"] = "Visit Requests";
+}
+
+<h2>Visit Requests</h2>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Type</th>
+			<th>Notes</th>
+			<th>Status</th>
+			<th>Requested At</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var r in Model)
+		{
+			<tr>
+				<td>@r.Id</td>
+				<td>@r.Type</td>
+				<td>@r.Notes</td>
+				<td>@r.Status</td>
+				<td>@r.RequestedAt.ToLocalTime()</td>
+				<td>
+					<form asp-action="UpdateRequestStatus" method="post" class="d-inline">
+						<input type="hidden" name="id" value="@r.Id" />
+						<select name="status" class="form-select form-select-sm d-inline w-auto">
+							<option>Pending</option>
+							<option>Approved</option>
+							<option>Declined</option>
+							<option>Completed</option>
+						</select>
+						<button class="btn btn-sm btn-success" type="submit">Update</button>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+

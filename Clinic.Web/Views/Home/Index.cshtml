@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Clinic.Web.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="py-5 text-center bg-light rounded-3 mb-4">
+    <h1 class="display-5 fw-bold">Clinic Solution</h1>
+    <p class="lead mb-4">Simple portal for patients and doctors to manage profiles, visit requests and checkups.</p>
+    @if (!SignInManager.IsSignedIn(User))
+    {
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a class="btn btn-primary btn-lg px-4" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            <a class="btn btn-outline-secondary btn-lg px-4" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </div>
+    }
+</div>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="row g-4">
+        @if (User.IsInRole("Patient"))
+        {
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">My Dashboard</h5>
+                        <p class="card-text">View your profile, visit requests and status chart.</p>
+                        <a class="btn btn-primary" asp-controller="Patient" asp-action="Dashboard">Open Patient Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Patients</h5>
+                        <p class="card-text">Browse patients, send visit or checkup requests.</p>
+                        <a class="btn btn-primary" asp-controller="Admin" asp-action="Patients">Go to Patients</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Visit Requests</h5>
+                        <p class="card-text">Track and update visit/checkup request statuses.</p>
+                        <a class="btn btn-secondary" asp-controller="Admin" asp-action="VisitRequests">Manage Requests</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
